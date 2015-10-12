@@ -68,6 +68,6 @@ namespace MLPCore
             // TODO: Load Sets
         }
 
-        public abstract void Run();
+        public abstract void Run(double learnRate, double momentum);
     }
 }

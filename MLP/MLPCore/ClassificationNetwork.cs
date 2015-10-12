@@ -18,7 +18,7 @@ namespace MLPCore
             get { throw new NotImplementedException(); }
         }
 
-        public override void Run()
+        public override void Run(double learnRate, double momentum)
         {
             throw new NotImplementedException();
         }
