@@ -10,15 +10,15 @@ namespace MLPCore
     {
         protected override int FirstLayerNeuronCount
         {
-            get { throw new NotImplementedException(); }
+            get { return 1; }
         }
 
         protected override int LastLayerNeuronCount
         {
-            get { throw new NotImplementedException(); }
+            get { return 1; }
         }
 
-        public override void Run()
+        public override void Run(double learnRate, double momentum)
         {
             throw new NotImplementedException();
         }
