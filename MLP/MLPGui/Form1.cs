@@ -16,5 +16,10 @@ namespace MLPGui
         {
             InitializeComponent();
         }
+
+        private void wyjścieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
