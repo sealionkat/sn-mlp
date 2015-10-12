@@ -31,9 +31,11 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolSSLStatusTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolSSLStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wyjścieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemLoadFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxOpts = new System.Windows.Forms.GroupBox();
             this.comboBoxProblem = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -55,10 +57,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.buttonLearn = new System.Windows.Forms.Button();
             this.buttonExecute = new System.Windows.Forms.Button();
-            this.wczytajToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.groupBoxOpts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDIterations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDNeurons)).BeginInit();
@@ -85,35 +85,47 @@
             // toolSSLStatus
             // 
             this.toolSSLStatus.Name = "toolSSLStatus";
-            this.toolSSLStatus.Size = new System.Drawing.Size(36, 17);
-            this.toolSSLStatus.Text = "ready";
+            this.toolSSLStatus.Size = new System.Drawing.Size(47, 17);
+            this.toolSSLStatus.Text = "gotowy";
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.plikToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(627, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(627, 24);
+            this.menuStrip.TabIndex = 1;
+            this.menuStrip.Text = "menuStrip";
             // 
             // plikToolStripMenuItem
             // 
             this.plikToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.wczytajToolStripMenuItem1,
+            this.toolStripMenuItemLoadFile,
             this.toolStripSeparator1,
-            this.wyjścieToolStripMenuItem});
+            this.toolStripMenuItemClose});
             this.plikToolStripMenuItem.Name = "plikToolStripMenuItem";
             this.plikToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
             this.plikToolStripMenuItem.Text = "Plik";
             // 
-            // wyjścieToolStripMenuItem
+            // toolStripMenuItemLoadFile
             // 
-            this.wyjścieToolStripMenuItem.Name = "wyjścieToolStripMenuItem";
-            this.wyjścieToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.wyjścieToolStripMenuItem.Text = "Wyjście";
-            this.wyjścieToolStripMenuItem.Click += new System.EventHandler(this.wyjścieToolStripMenuItem_Click);
+            this.toolStripMenuItemLoadFile.Name = "toolStripMenuItemLoadFile";
+            this.toolStripMenuItemLoadFile.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemLoadFile.Text = "Wczytaj plik";
+            this.toolStripMenuItemLoadFile.Click += new System.EventHandler(this.ToolStripMenuItemLoadFile_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // toolStripMenuItemClose
+            // 
+            this.toolStripMenuItemClose.Name = "toolStripMenuItemClose";
+            this.toolStripMenuItemClose.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemClose.Text = "Wyjście";
+            this.toolStripMenuItemClose.Click += new System.EventHandler(this.ToolStripMenuItemClose_Click);
             // 
             // groupBoxOpts
             // 
@@ -221,9 +233,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(460, 29);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(74, 13);
+            this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 8;
-            this.label7.Text = "Liczba iteracji:";
+            this.label7.Text = "Liczba iteracji";
             // 
             // checkBoxBias
             // 
@@ -361,17 +373,6 @@
             this.buttonExecute.Text = "Uruchom";
             this.buttonExecute.UseVisualStyleBackColor = true;
             // 
-            // wczytajToolStripMenuItem1
-            // 
-            this.wczytajToolStripMenuItem1.Name = "wczytajToolStripMenuItem1";
-            this.wczytajToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.wczytajToolStripMenuItem1.Text = "Wczytaj plik";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -383,16 +384,16 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBoxOpts);
             this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.menuStrip);
+            this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(643, 382);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MLP with Encog";
+            this.Text = "MLP Encog";
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.groupBoxOpts.ResumeLayout(false);
             this.groupBoxOpts.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDIterations)).EndInit();
@@ -408,9 +409,9 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolSSLStatusTxt;
         private System.Windows.Forms.ToolStripStatusLabel toolSSLStatus;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem plikToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wyjścieToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClose;
         private System.Windows.Forms.GroupBox groupBoxOpts;
         private System.Windows.Forms.NumericUpDown numericUDLayers;
         private System.Windows.Forms.Label label3;
@@ -432,7 +433,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonLearn;
         private System.Windows.Forms.Button buttonExecute;
-        private System.Windows.Forms.ToolStripMenuItem wczytajToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLoadFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
