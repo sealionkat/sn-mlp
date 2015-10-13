@@ -23,6 +23,7 @@ namespace MLPCore
     {
         private BasicNetwork network;
         private IMLDataSet trainingData;
+        private List<IMLData> testData;
 
         protected abstract int FirstLayerNeuronCount { get; }
         protected abstract int LastLayerNeuronCount { get; }
@@ -109,6 +110,28 @@ namespace MLPCore
             }
         }
 
+        private void Randomize(ref List<double[]> input, ref List<double[]> ideal)
+        {
+            Random r = new Random();
+
+            List<double[]> new_input = new List<double[]>();
+            List<double[]> new_ideal = new List<double[]>();
+
+            while(input.Count > 0)
+            {
+                int n = r.Next(input.Count);
+
+                new_ideal.Add(ideal[n]);
+                ideal.RemoveAt(n);
+
+                new_input.Add(input[n]);
+                input.RemoveAt(n);
+            }
+
+            input = new_input;
+            ideal = new_ideal;
+        }
+
         private void LoadData(string trainingFile, string testFile, ActivationFunctionType fType)
         {
             ReadCSV train_csv = new ReadCSV(trainingFile, true, CSVFormat.DecimalPoint);
@@ -133,17 +156,31 @@ namespace MLPCore
             double[] vmax, vmin;
             Analyze(ref train_input, out vmin, out vmax);
             Normalize(ref train_input, fType, ref vmin, ref vmax);
+            Randomize(ref train_input, ref train_ideal);
 
             trainingData = new BasicMLDataSet(train_input.ToArray(), train_ideal.ToArray());
 
             ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
 
+            List<double[]> test_input = new List<double[]>();
+
             while(test_csv.Next())
             {
-                // TODO
+                double x = train_csv.GetDouble(0);
+                double y = train_csv.GetDouble(1);
+
+                test_input.Add(new[] { x, y });
             }
 
             test_csv.Close();
+
+            Normalize(ref test_input, fType, ref vmin, ref vmax);
+
+            testData = new List<IMLData>();
+            foreach(var d in test_input)
+            {
+                testData.Add(new BasicMLData(d));
+            }
 
             /*IVersatileDataSource trainSource = new CSVDataSource(trainingFile, true, CSVFormat.DecimalPoint);
             var tData = new VersatileMLDataSet(trainSource);
@@ -197,12 +234,19 @@ namespace MLPCore
         {
             List<double> error = new List<double>();
 
+            /*foreach(var d in trainingData)
+            {
+                Console.WriteLine("{0}; {1}", d.Input, d.Ideal);
+                Console.ReadKey(true);
+            }*/
+
             var training = new Backpropagation(network, trainingData, learnRate, momentum);
 
             for (int i = 0; i < iterationCount; ++i)
             {
                 training.Iteration(1);
                 error.Add(training.Error);
+                Console.WriteLine(training.Error);
                 // TODO: powiadomienia przez delegate?
             }
 
@@ -211,6 +255,13 @@ namespace MLPCore
             return error;
         }
 
-        public void Test() { }
+        public void Test() 
+        {
+            foreach(var dd in testData)
+            {
+                var d = network.Compute(dd);
+                Console.WriteLine("{0} {1} {2}", d[0], d[1], d[2]);
+            }
+        }
     }
 }

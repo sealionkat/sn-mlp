@@ -15,6 +15,7 @@ namespace MLPTester
                 new List<int>() { 4 }, Network.ActivationFunctionType.BiPolar, true);
 
             n.Train(20000, 0.3, 0.2);
+            n.Test();
 
             
         }
