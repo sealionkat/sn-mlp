@@ -46,9 +46,10 @@ namespace MLPCore
             }
         }
 
-        private List<double[]> MakeIdealFromInput(List<int> input)
+        private List<double[]> MakeIdealFromInput(List<int> input, ActivationFunctionType fType)
         {
             List<double[]> train_ideal = new List<double[]>();
+            double min_val = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
 
             HashSet<int> unique = new HashSet<int>(input);
             int[] unique_idx = unique.ToArray();
@@ -58,8 +59,7 @@ namespace MLPCore
                 double[] ideal_item = new double[unique_idx.Length];
                 for (int i = 0; i < unique_idx.Length; ++i)
                 {
-                    // TODO: od 0 czy -1?
-                    ideal_item[i] = unique_idx[i] == v ? 1.0 : -1.0;
+                    ideal_item[i] = unique_idx[i] == v ? 1.0 : min_val;
                 }
 
                 train_ideal.Add(ideal_item);
@@ -68,7 +68,7 @@ namespace MLPCore
             return train_ideal;
         }
 
-        private void Normalize(ref List<double[]> data)
+        private void Normalize(ref List<double[]> data, ActivationFunctionType fType)
         {
             double[] vmin = new double[data[0].Length];
             double[] vmax = new double[data[0].Length];
@@ -91,8 +91,7 @@ namespace MLPCore
                 }
             }
 
-            // TODO: od 0?
-            double min_value = -1.0;
+            double min_value = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
             double max_value = 1.0;
             double norm_size = max_value - min_value;
 
@@ -106,7 +105,7 @@ namespace MLPCore
             }
         }
 
-        private void LoadData(string trainingFile, string testFile)
+        private void LoadData(string trainingFile, string testFile, ActivationFunctionType fType)
         {
             ReadCSV train_csv = new ReadCSV(trainingFile, true, CSVFormat.DecimalPoint);
 
@@ -125,8 +124,8 @@ namespace MLPCore
 
             train_csv.Close();
 
-            List<double[]> train_ideal = MakeIdealFromInput(train_ideal_class);
-            Normalize(ref train_input);
+            List<double[]> train_ideal = MakeIdealFromInput(train_ideal_class, fType);
+            Normalize(ref train_input, fType);
 
             trainingData = new BasicMLDataSet(train_input.ToArray(), train_ideal.ToArray());
 
@@ -174,7 +173,7 @@ namespace MLPCore
         public Network(string trainingSetFile, string testSetFile, List<int> networkStructure,
             ActivationFunctionType activationFunctionType, bool bias)
         {
-            LoadData(trainingSetFile, testSetFile);
+            LoadData(trainingSetFile, testSetFile, activationFunctionType);
             CreateNetwork(networkStructure, activationFunctionType, bias);
         }
 
