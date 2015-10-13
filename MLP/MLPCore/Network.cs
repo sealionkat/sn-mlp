@@ -68,10 +68,10 @@ namespace MLPCore
             return train_ideal;
         }
 
-        private void Normalize(ref List<double[]> data, ActivationFunctionType fType)
+        private void Analyze(ref List<double[]> data, out double[] vmin, out double[] vmax)
         {
-            double[] vmin = new double[data[0].Length];
-            double[] vmax = new double[data[0].Length];
+            vmin = new double[data[0].Length];
+            vmax = new double[data[0].Length];
 
             for (int i = 0; i < data[0].Length; ++i)
             {
@@ -90,16 +90,20 @@ namespace MLPCore
                         vmax[i] = item[i];
                 }
             }
+        }
 
+        private void Normalize(ref List<double[]> data, ActivationFunctionType fType, ref double[] vmin, ref double[] vmax)
+        {
             double min_value = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
             double max_value = 1.0;
             double norm_size = max_value - min_value;
 
-            foreach (double[] item in data)
+            for (int i = 0; i < data[0].Length; ++i)
             {
-                for (int i = 0; i < item.Length; ++i)
+                double d_size = vmax[i] - vmin[i];
+
+                foreach (double[] item in data)
                 {
-                    double d_size = vmax[i] - vmin[i];
                     item[i] = ((item[i] - vmin[i]) * norm_size / d_size) + min_value;
                 }
             }
@@ -125,9 +129,21 @@ namespace MLPCore
             train_csv.Close();
 
             List<double[]> train_ideal = MakeIdealFromInput(train_ideal_class, fType);
-            Normalize(ref train_input, fType);
+
+            double[] vmax, vmin;
+            Analyze(ref train_input, out vmin, out vmax);
+            Normalize(ref train_input, fType, ref vmin, ref vmax);
 
             trainingData = new BasicMLDataSet(train_input.ToArray(), train_ideal.ToArray());
+
+            ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
+
+            while(test_csv.Next())
+            {
+                // TODO
+            }
+
+            test_csv.Close();
 
             /*IVersatileDataSource trainSource = new CSVDataSource(trainingFile, true, CSVFormat.DecimalPoint);
             var tData = new VersatileMLDataSet(trainSource);
@@ -181,21 +197,13 @@ namespace MLPCore
         {
             List<double> error = new List<double>();
 
-            var training = new Backpropagation(network, trainingData/*, learnRate, momentum*/);
+            var training = new Backpropagation(network, trainingData, learnRate, momentum);
 
-            //for (int i = 0; i < iterationCount; ++i)
-            int i = 0;
-            while(true)
+            for (int i = 0; i < iterationCount; ++i)
             {
                 training.Iteration(1);
-                if (training.Error <= 0.1)
-                    break;
-                //error.Add(training.Error);
-                //Console.WriteLine(training.Error);
+                error.Add(training.Error);
                 // TODO: powiadomienia przez delegate?
-                ++i;
-                if(i%1000 == 0)
-                    Console.WriteLine(training.Error);
             }
 
             training.FinishTraining();
