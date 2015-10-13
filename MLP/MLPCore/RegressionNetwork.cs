@@ -18,14 +18,16 @@ namespace MLPCore
             get { return 1; }
         }
 
-        public override void Run(double learnRate, double momentum)
+        public override List<double> Train(int iterationCount, double learnRate, double momentum)
         {
+            base.Train(iterationCount, learnRate, momentum);
+
             throw new NotImplementedException();
         }
 
-        public RegressionNetwork(string trainingSetFile, string testSetFile, int iterationCount, List<int> networkStructure,
+        public RegressionNetwork(string trainingSetFile, string testSetFile, List<int> networkStructure,
             ActivationFunctionType activationFunctionType, bool bias) :
-            base(trainingSetFile, testSetFile, iterationCount, networkStructure, activationFunctionType, bias)
+            base(trainingSetFile, testSetFile, networkStructure, activationFunctionType, bias)
         {
 
         }
