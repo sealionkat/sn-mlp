@@ -40,7 +40,7 @@ namespace MLPCore
             switch (fType)
             {
                 case ActivationFunctionType.BiPolar:
-                    return new ActivationBiPolar();
+                    return new ActivationBipolarSteepenedSigmoid();
                 case ActivationFunctionType.UniPolar:
                     return new ActivationSigmoid();
                 default:
@@ -170,14 +170,15 @@ namespace MLPCore
 
             while(test_csv.Next())
             {
-                double x = train_csv.GetDouble(0);
-                double y = train_csv.GetDouble(1);
+                double x = test_csv.GetDouble(0);
+                double y = test_csv.GetDouble(1);
 
                 test_input.Add(new[] { x, y });
             }
 
             test_csv.Close();
 
+            //Analyze(ref test_input, out vmin, out vmax);
             Normalize(ref test_input, fType, ref vmin, ref vmax);
 
             testData = new List<IMLData>();
@@ -219,12 +220,6 @@ namespace MLPCore
         {
             List<Tuple<int, double, double>> error = new List<Tuple<int, double, double>>();
 
-            /*foreach(var d in trainingData)
-            {
-                Console.WriteLine("{0}; {1}", d.Input, d.Ideal);
-                Console.ReadKey(true);
-            }*/
-
             var training = new Backpropagation(network, trainingData, learnRate, momentum);
             training.BatchSize = 1;
 
@@ -234,24 +229,34 @@ namespace MLPCore
                 network.CalculateError(validationData);
                 double val_error = network.CalculateError(validationData);
                 error.Add(new Tuple<int, double, double>(i, training.Error, val_error));
-                if(i%100 == 0)
-                    Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
+                //if(i%100 == 0)
+                    //Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
             }
 
             training.FinishTraining();
             return error;
         }
 
-        public void Test() 
+        public List<Tuple<double, double, int>> Test() 
         {
-            Console.WriteLine(network.DumpWeights());
-            Console.ReadKey(true);
+            List<Tuple<double, double, int>> cvals = new List<Tuple<double, double, int>>();
 
             foreach(var dd in testData)
             {
                 var d = network.Compute(dd);
-                Console.WriteLine("{0} {1} {2}", d[0], d[1], d[2]);
+                int cls = 1;
+
+                for (int i = 1; i < LastLayerNeuronCount; ++i)
+                {
+                    if (d[i] > d[i - 1])
+                        ++cls;
+                }
+
+                cvals.Add(new Tuple<double, double, int>(dd[0], dd[1], cls));
+                //Console.WriteLine("[{0} {1}]: {2}", dd[0], dd[1], cls);
             }
+
+            return cvals;
         }
     }
 }
