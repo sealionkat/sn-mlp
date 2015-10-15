@@ -25,6 +25,8 @@ namespace MLPCore
         private IMLDataSet trainingData;
         private IMLDataSet validationData;
         private List<IMLData> testData;
+        List<double[]> test_input_orig;
+        List<Results> train_input_orig;
 
         protected abstract int FirstLayerNeuronCount { get; }
         protected abstract int LastLayerNeuronCount { get; }
@@ -139,6 +141,7 @@ namespace MLPCore
 
             List<double[]> train_input = new List<double[]>();
             List<int> train_ideal_class = new List<int>();
+            train_input_orig = new List<Results>();
 
             while (train_csv.Next())
             {
@@ -148,6 +151,7 @@ namespace MLPCore
 
                 train_input.Add(new[] { x, y });
                 train_ideal_class.Add(r);
+                train_input_orig.Add(new Results(x, y, r));
             }
 
             train_csv.Close();
@@ -167,6 +171,7 @@ namespace MLPCore
             ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
 
             List<double[]> test_input = new List<double[]>();
+            test_input_orig = new List<double[]>();
 
             while(test_csv.Next())
             {
@@ -174,6 +179,7 @@ namespace MLPCore
                 double y = test_csv.GetDouble(1);
 
                 test_input.Add(new[] { x, y });
+                test_input_orig.Add(new[] { x, y });
             }
 
             test_csv.Close();
@@ -237,10 +243,11 @@ namespace MLPCore
             return error;
         }
 
-        public List<Tuple<double, double, int>> Test() 
+        public Tuple<List<Results>, List<Results>> Test() 
         {
-            List<Tuple<double, double, int>> cvals = new List<Tuple<double, double, int>>();
+            List<Results> res = new List<Results>();
 
+            int j = 0;
             foreach(var dd in testData)
             {
                 var d = network.Compute(dd);
@@ -252,11 +259,11 @@ namespace MLPCore
                         ++cls;
                 }
 
-                cvals.Add(new Tuple<double, double, int>(dd[0], dd[1], cls));
+                res.Add(new Results(test_input_orig[j][0], test_input_orig[j][1], cls));
                 //Console.WriteLine("[{0} {1}]: {2}", dd[0], dd[1], cls);
             }
 
-            return cvals;
+            return new Tuple<List<Results>, List<Results>>(res, train_input_orig);
         }
     }
 }
