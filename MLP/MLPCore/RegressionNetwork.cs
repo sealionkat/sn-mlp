@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Encog.ML.Data;
+using Encog.ML.Data.Basic;
+using Encog.Util.CSV;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,18 +21,83 @@ namespace MLPCore
             get { return 1; }
         }
 
-        public override List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
-        {
-            base.Train(iterationCount, learnRate, momentum);
-
-            throw new NotImplementedException();
-        }
-
         public RegressionNetwork(string trainingSetFile, string testSetFile, List<int> networkStructure,
             ActivationFunctionType activationFunctionType, bool bias) :
             base(trainingSetFile, testSetFile, networkStructure, activationFunctionType, bias)
         {
 
+        }
+
+        protected override void LoadData(string trainingFile, string testFile, ActivationFunctionType fType)
+        {
+            ReadCSV train_csv = new ReadCSV(trainingFile, true, CSVFormat.DecimalPoint);
+
+            List<double[]> train_input = new List<double[]>();
+            List<double[]> train_ideal = new List<double[]>();
+
+            train_input_orig = new List<Results>();
+
+            while (train_csv.Next())
+            {
+                double x = train_csv.GetDouble(0);
+                double y = train_csv.GetDouble(1);
+
+                train_input.Add(new double[] { x });
+                train_ideal.Add(new double[] { y });
+                train_input_orig.Add(new Results(x, y, 0));
+            }
+
+            train_csv.Close();
+
+            double[] vmax, vmin;
+            Analyze(ref train_input, out vmin, out vmax);
+            Normalize(ref train_input, fType, ref vmin, ref vmax);
+            Randomize(ref train_input, ref train_ideal);
+
+            int validation_size = train_input.Count / 10;
+
+            validationData = new BasicMLDataSet(train_input.Take(validation_size).ToArray(), train_ideal.Take(validation_size).ToArray());
+            trainingData = new BasicMLDataSet(train_input.Skip(validation_size).ToArray(), train_ideal.Skip(validation_size).ToArray());
+
+            ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
+
+            List<double[]> test_input = new List<double[]>();
+            test_input_orig = new List<double[]>();
+
+            while (test_csv.Next())
+            {
+                double x = test_csv.GetDouble(0);
+
+                test_input.Add(new[] { x });
+                test_input_orig.Add(new[] { x });
+            }
+
+            test_csv.Close();
+
+            //Analyze(ref test_input, out vmin, out vmax);
+            Normalize(ref test_input, fType, ref vmin, ref vmax);
+
+            testData = new List<IMLData>();
+            foreach (var d in test_input)
+            {
+                testData.Add(new BasicMLData(d));
+            }
+        }
+
+        public override Tuple<List<Results>, List<Results>> Test()
+        {
+            List<Results> res = new List<Results>();
+
+            int j = 0;
+            foreach (var dd in testData)
+            {
+                var d = network.Compute(dd);
+
+                res.Add(new Results(dd[0], d[0], 0));
+                //Console.WriteLine("[{0}: {1}]", dd[0], d[0]);
+            }
+
+            return new Tuple<List<Results>, List<Results>>(res, train_input_orig);
         }
     }
 }

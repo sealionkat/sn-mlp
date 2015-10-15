@@ -21,12 +21,12 @@ namespace MLPCore
 {
     public abstract class Network
     {
-        private BasicNetwork network;
-        private IMLDataSet trainingData;
-        private IMLDataSet validationData;
-        private List<IMLData> testData;
-        List<double[]> test_input_orig;
-        List<Results> train_input_orig;
+        protected BasicNetwork network;
+        protected IMLDataSet trainingData;
+        protected IMLDataSet validationData;
+        protected List<IMLData> testData;
+        protected List<double[]> test_input_orig;
+        protected List<Results> train_input_orig;
 
         protected abstract int FirstLayerNeuronCount { get; }
         protected abstract int LastLayerNeuronCount { get; }
@@ -50,7 +50,7 @@ namespace MLPCore
             }
         }
 
-        private List<double[]> MakeIdealFromInput(List<int> input, ActivationFunctionType fType)
+        protected List<double[]> MakeIdealFromInput(List<int> input, ActivationFunctionType fType)
         {
             List<double[]> train_ideal = new List<double[]>();
             double min_val = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
@@ -72,7 +72,7 @@ namespace MLPCore
             return train_ideal;
         }
 
-        private void Analyze(ref List<double[]> data, out double[] vmin, out double[] vmax)
+        protected void Analyze(ref List<double[]> data, out double[] vmin, out double[] vmax)
         {
             vmin = new double[data[0].Length];
             vmax = new double[data[0].Length];
@@ -96,7 +96,7 @@ namespace MLPCore
             }
         }
 
-        private void Normalize(ref List<double[]> data, ActivationFunctionType fType, ref double[] vmin, ref double[] vmax)
+        protected void Normalize(ref List<double[]> data, ActivationFunctionType fType, ref double[] vmin, ref double[] vmax)
         {
             double min_value = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
             double max_value = 1.0;
@@ -113,7 +113,7 @@ namespace MLPCore
             }
         }
 
-        private void Randomize(ref List<double[]> input, ref List<double[]> ideal)
+        protected void Randomize(ref List<double[]> input, ref List<double[]> ideal)
         {
             Random r = new Random();
 
@@ -135,64 +135,7 @@ namespace MLPCore
             ideal = new_ideal;
         }
 
-        private void LoadData(string trainingFile, string testFile, ActivationFunctionType fType)
-        {
-            ReadCSV train_csv = new ReadCSV(trainingFile, true, CSVFormat.DecimalPoint);
-
-            List<double[]> train_input = new List<double[]>();
-            List<int> train_ideal_class = new List<int>();
-            train_input_orig = new List<Results>();
-
-            while (train_csv.Next())
-            {
-                double x = train_csv.GetDouble(0);
-                double y = train_csv.GetDouble(1);
-                int r = (int)train_csv.GetDouble(2);
-
-                train_input.Add(new[] { x, y });
-                train_ideal_class.Add(r);
-                train_input_orig.Add(new Results(x, y, r));
-            }
-
-            train_csv.Close();
-
-            List<double[]> train_ideal = MakeIdealFromInput(train_ideal_class, fType);
-
-            double[] vmax, vmin;
-            Analyze(ref train_input, out vmin, out vmax);
-            Normalize(ref train_input, fType, ref vmin, ref vmax);
-            Randomize(ref train_input, ref train_ideal);
-
-            int validation_size = train_input.Count / 10;
-
-            validationData = new BasicMLDataSet(train_input.Take(validation_size).ToArray(), train_ideal.Take(validation_size).ToArray());
-            trainingData = new BasicMLDataSet(train_input.Skip(validation_size).ToArray(), train_ideal.Skip(validation_size).ToArray());
-
-            ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
-
-            List<double[]> test_input = new List<double[]>();
-            test_input_orig = new List<double[]>();
-
-            while(test_csv.Next())
-            {
-                double x = test_csv.GetDouble(0);
-                double y = test_csv.GetDouble(1);
-
-                test_input.Add(new[] { x, y });
-                test_input_orig.Add(new[] { x, y });
-            }
-
-            test_csv.Close();
-
-            //Analyze(ref test_input, out vmin, out vmax);
-            Normalize(ref test_input, fType, ref vmin, ref vmax);
-
-            testData = new List<IMLData>();
-            foreach(var d in test_input)
-            {
-                testData.Add(new BasicMLData(d));
-            }
-        }
+        protected abstract void LoadData(string trainingFile, string testFile, ActivationFunctionType fType);
 
         private void CreateNetwork(List<int> structure, ActivationFunctionType fType, bool bias)
         {
@@ -222,7 +165,7 @@ namespace MLPCore
             CreateNetwork(networkStructure, activationFunctionType, bias);
         }
 
-        public virtual List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
+        public List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
         {
             List<Tuple<int, double, double>> error = new List<Tuple<int, double, double>>();
 
@@ -236,34 +179,13 @@ namespace MLPCore
                 double val_error = network.CalculateError(validationData);
                 error.Add(new Tuple<int, double, double>(i, training.Error, val_error));
                 //if(i%100 == 0)
-                    //Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
+                    Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
             }
 
             training.FinishTraining();
             return error;
         }
 
-        public Tuple<List<Results>, List<Results>> Test() 
-        {
-            List<Results> res = new List<Results>();
-
-            int j = 0;
-            foreach(var dd in testData)
-            {
-                var d = network.Compute(dd);
-                int cls = 1;
-
-                for (int i = 1; i < LastLayerNeuronCount; ++i)
-                {
-                    if (d[i] > d[i - 1])
-                        ++cls;
-                }
-
-                res.Add(new Results(test_input_orig[j][0], test_input_orig[j][1], cls));
-                //Console.WriteLine("[{0} {1}]: {2}", dd[0], dd[1], cls);
-            }
-
-            return new Tuple<List<Results>, List<Results>>(res, train_input_orig);
-        }
+        public abstract Tuple<List<Results>, List<Results>> Test();
     }
 }
