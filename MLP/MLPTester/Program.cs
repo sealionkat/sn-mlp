@@ -12,12 +12,10 @@ namespace MLPTester
         static void Main(string[] args)
         {
             Network n = new ClassificationNetwork("..\\..\\..\\..\\data\\data.train.csv", "..\\..\\..\\..\\data\\data.test.csv", 
-                new List<int>() { 4 }, Network.ActivationFunctionType.BiPolar, true);
+                new List<int>() { 80 }, Network.ActivationFunctionType.BiPolar, true);
 
-            n.Train(20000, 0.3, 0.2);
+            n.Train(10000, 0.01, 0.1);
             n.Test();
-
-            
         }
     }
 }

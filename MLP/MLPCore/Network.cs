@@ -23,6 +23,7 @@ namespace MLPCore
     {
         private BasicNetwork network;
         private IMLDataSet trainingData;
+        private IMLDataSet validationData;
         private List<IMLData> testData;
 
         protected abstract int FirstLayerNeuronCount { get; }
@@ -41,7 +42,7 @@ namespace MLPCore
                 case ActivationFunctionType.BiPolar:
                     return new ActivationBiPolar();
                 case ActivationFunctionType.UniPolar:
-                    return new ActivationStep();
+                    return new ActivationSigmoid();
                 default:
                     return null;
             }
@@ -158,7 +159,10 @@ namespace MLPCore
             Normalize(ref train_input, fType, ref vmin, ref vmax);
             Randomize(ref train_input, ref train_ideal);
 
-            trainingData = new BasicMLDataSet(train_input.ToArray(), train_ideal.ToArray());
+            int validation_size = train_input.Count / 10;
+
+            validationData = new BasicMLDataSet(train_input.Take(validation_size).ToArray(), train_ideal.Take(validation_size).ToArray());
+            trainingData = new BasicMLDataSet(train_input.Skip(validation_size).ToArray(), train_ideal.Skip(validation_size).ToArray());
 
             ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
 
@@ -181,27 +185,6 @@ namespace MLPCore
             {
                 testData.Add(new BasicMLData(d));
             }
-
-            /*IVersatileDataSource trainSource = new CSVDataSource(trainingFile, true, CSVFormat.DecimalPoint);
-            var tData = new VersatileMLDataSet(trainSource);
-
-            tData.DefineSourceColumn("x", ColumnType.Continuous);
-            tData.DefineSourceColumn("y", ColumnType.Continuous);
-            var o = tData.DefineSourceColumn("cls", ColumnType.Nominal);
-
-            tData.Analyze();
-
-            tData.DefineSingleOutputOthersInput(o);
-
-            var model = new EncogModel(tData);
-            model.SelectMethod(tData, MLMethodFactory.TypeFeedforward);
-            //tData.NormHelper.NormStrategy = new BasicNormalizationStrategy(0, 1, 0, 1);
-
-            tData.Normalize();
-
-            Console.WriteLine(tData.CalculatedIdealSize);
-
-            trainingData = tData;*/
         }
 
         private void CreateNetwork(List<int> structure, ActivationFunctionType fType, bool bias)
@@ -209,7 +192,8 @@ namespace MLPCore
             network = new BasicNetwork();
 
             // Pierwsza warstwa nie ma funkcji aktywacji.
-            network.AddLayer(new BasicLayer(null, bias, FirstLayerNeuronCount));
+            //network.AddLayer(new BasicLayer(null, bias, FirstLayerNeuronCount));
+            network.AddLayer(new BasicLayer(FirstLayerNeuronCount));
 
             foreach (int neurons in structure)
             {
@@ -217,7 +201,8 @@ namespace MLPCore
             }
 
             // Ostatnia warstwa nie ma biasu.
-            network.AddLayer(new BasicLayer(CreateActivationFunction(fType), false, LastLayerNeuronCount));
+            //network.AddLayer(new BasicLayer(CreateActivationFunction(fType), false, LastLayerNeuronCount));
+            network.AddLayer(new BasicLayer(LastLayerNeuronCount));
 
             network.Structure.FinalizeStructure();
             network.Reset();
@@ -230,9 +215,9 @@ namespace MLPCore
             CreateNetwork(networkStructure, activationFunctionType, bias);
         }
 
-        public virtual List<double> Train(int iterationCount, double learnRate, double momentum)
+        public virtual List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
         {
-            List<double> error = new List<double>();
+            List<Tuple<int, double, double>> error = new List<Tuple<int, double, double>>();
 
             /*foreach(var d in trainingData)
             {
@@ -241,22 +226,27 @@ namespace MLPCore
             }*/
 
             var training = new Backpropagation(network, trainingData, learnRate, momentum);
+            training.BatchSize = 1;
 
             for (int i = 0; i < iterationCount; ++i)
             {
                 training.Iteration(1);
-                error.Add(training.Error);
-                Console.WriteLine(training.Error);
-                // TODO: powiadomienia przez delegate?
+                network.CalculateError(validationData);
+                double val_error = network.CalculateError(validationData);
+                error.Add(new Tuple<int, double, double>(i, training.Error, val_error));
+                if(i%100 == 0)
+                    Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
             }
 
             training.FinishTraining();
-
             return error;
         }
 
         public void Test() 
         {
+            Console.WriteLine(network.DumpWeights());
+            Console.ReadKey(true);
+
             foreach(var dd in testData)
             {
                 var d = network.Compute(dd);

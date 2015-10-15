@@ -19,11 +19,9 @@ namespace MLPCore
             get { return 3; }
         }
 
-        public override List<double> Train(int iterationCount, double learnRate, double momentum)
+        public override List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
         {
             return base.Train(iterationCount, learnRate, momentum);
-
-            throw new NotImplementedException();
         }
 
         public ClassificationNetwork(string trainingSetFile, string testSetFile, List<int> networkStructure,

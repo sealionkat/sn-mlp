@@ -18,7 +18,7 @@ namespace MLPCore
             get { return 1; }
         }
 
-        public override List<double> Train(int iterationCount, double learnRate, double momentum)
+        public override List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
         {
             base.Train(iterationCount, learnRate, momentum);
 
