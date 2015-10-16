@@ -28,6 +28,9 @@ namespace MLPCore
         protected List<double[]> test_input_orig;
         protected List<Results> train_input_orig;
 
+        protected double[] vmin, vmax;
+        protected ActivationFunctionType fType;
+
         protected abstract int FirstLayerNeuronCount { get; }
         protected abstract int LastLayerNeuronCount { get; }
 
@@ -37,7 +40,7 @@ namespace MLPCore
             BiPolar
         }
 
-        private IActivationFunction CreateActivationFunction(ActivationFunctionType fType)
+        private IActivationFunction CreateActivationFunction()
         {
             switch (fType)
             {
@@ -50,7 +53,7 @@ namespace MLPCore
             }
         }
 
-        protected List<double[]> MakeIdealFromInput(List<int> input, ActivationFunctionType fType)
+        protected List<double[]> MakeIdealFromInput(List<int> input)
         {
             List<double[]> train_ideal = new List<double[]>();
             double min_val = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
@@ -72,7 +75,7 @@ namespace MLPCore
             return train_ideal;
         }
 
-        protected void Analyze(ref List<double[]> data, out double[] vmin, out double[] vmax)
+        protected void Analyze(ref List<double[]> data)
         {
             vmin = new double[data[0].Length];
             vmax = new double[data[0].Length];
@@ -96,7 +99,7 @@ namespace MLPCore
             }
         }
 
-        protected void Normalize(ref List<double[]> data, ActivationFunctionType fType, ref double[] vmin, ref double[] vmax)
+        protected void Normalize(ref List<double[]> data)
         {
             double min_value = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
             double max_value = 1.0;
@@ -135,9 +138,10 @@ namespace MLPCore
             ideal = new_ideal;
         }
 
-        protected abstract void LoadData(string trainingFile, string testFile, ActivationFunctionType fType);
+        protected abstract void LoadTrainData(string trainingFile);
+        protected abstract void LoadTestData(string testFile);
 
-        private void CreateNetwork(List<int> structure, ActivationFunctionType fType, bool bias)
+        private void CreateNetwork(List<int> structure, bool bias)
         {
             network = new BasicNetwork();
 
@@ -147,7 +151,7 @@ namespace MLPCore
 
             foreach (int neurons in structure)
             {
-                network.AddLayer(new BasicLayer(CreateActivationFunction(fType), bias, neurons));
+                network.AddLayer(new BasicLayer(CreateActivationFunction(), bias, neurons));
             }
 
             // Ostatnia warstwa nie ma biasu.
@@ -158,11 +162,13 @@ namespace MLPCore
             network.Reset();
         }
 
-        public Network(string trainingSetFile, string testSetFile, List<int> networkStructure,
+        public Network(string trainingSetFile, List<int> networkStructure,
             ActivationFunctionType activationFunctionType, bool bias)
         {
-            LoadData(trainingSetFile, testSetFile, activationFunctionType);
-            CreateNetwork(networkStructure, activationFunctionType, bias);
+            fType = activationFunctionType;
+
+            LoadTrainData(trainingSetFile);
+            CreateNetwork(networkStructure, bias);
         }
 
         public List<Tuple<int, double, double>> Train(int iterationCount, double learnRate, double momentum)
@@ -186,6 +192,6 @@ namespace MLPCore
             return error;
         }
 
-        public abstract Tuple<List<Results>, List<Results>> Test();
+        public abstract Tuple<List<Results>, List<Results>> Test(string testSetFile);
     }
 }

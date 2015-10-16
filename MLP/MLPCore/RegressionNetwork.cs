@@ -21,14 +21,14 @@ namespace MLPCore
             get { return 1; }
         }
 
-        public RegressionNetwork(string trainingSetFile, string testSetFile, List<int> networkStructure,
+        public RegressionNetwork(string trainingSetFile, List<int> networkStructure,
             ActivationFunctionType activationFunctionType, bool bias) :
-            base(trainingSetFile, testSetFile, networkStructure, activationFunctionType, bias)
+            base(trainingSetFile, networkStructure, activationFunctionType, bias)
         {
 
         }
 
-        protected override void LoadData(string trainingFile, string testFile, ActivationFunctionType fType)
+        protected override void LoadTrainData(string trainingFile)
         {
             ReadCSV train_csv = new ReadCSV(trainingFile, true, CSVFormat.DecimalPoint);
 
@@ -49,16 +49,18 @@ namespace MLPCore
 
             train_csv.Close();
 
-            double[] vmax, vmin;
-            Analyze(ref train_input, out vmin, out vmax);
-            Normalize(ref train_input, fType, ref vmin, ref vmax);
+            Analyze(ref train_input);
+            Normalize(ref train_input);
             Randomize(ref train_input, ref train_ideal);
 
             int validation_size = train_input.Count / 10;
 
             validationData = new BasicMLDataSet(train_input.Take(validation_size).ToArray(), train_ideal.Take(validation_size).ToArray());
             trainingData = new BasicMLDataSet(train_input.Skip(validation_size).ToArray(), train_ideal.Skip(validation_size).ToArray());
+        }
 
+        protected override void LoadTestData(string testFile)
+        {
             ReadCSV test_csv = new ReadCSV(testFile, true, CSVFormat.DecimalPoint);
 
             List<double[]> test_input = new List<double[]>();
@@ -74,8 +76,8 @@ namespace MLPCore
 
             test_csv.Close();
 
-            //Analyze(ref test_input, out vmin, out vmax);
-            Normalize(ref test_input, fType, ref vmin, ref vmax);
+            //Analyze(ref test_input);
+            Normalize(ref test_input);
 
             testData = new List<IMLData>();
             foreach (var d in test_input)
@@ -84,11 +86,12 @@ namespace MLPCore
             }
         }
 
-        public override Tuple<List<Results>, List<Results>> Test()
+        public override Tuple<List<Results>, List<Results>> Test(string testSetFile)
         {
+            LoadTestData(testSetFile);
+
             List<Results> res = new List<Results>();
 
-            int j = 0;
             foreach (var dd in testData)
             {
                 var d = network.Compute(dd);
