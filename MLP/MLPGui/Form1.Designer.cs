@@ -56,8 +56,8 @@
             this.label12 = new System.Windows.Forms.Label();
             this.comboBoxLayerNo = new System.Windows.Forms.ComboBox();
             this.lTestFilename = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonLoadTrainingSet = new System.Windows.Forms.Button();
+            this.buttonLoadTestSet = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.groupBoxOpts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDIterations)).BeginInit();
@@ -320,6 +320,7 @@
             // 
             // buttonLearn
             // 
+            this.buttonLearn.Enabled = false;
             this.buttonLearn.Location = new System.Drawing.Point(12, 252);
             this.buttonLearn.Name = "buttonLearn";
             this.buttonLearn.Size = new System.Drawing.Size(75, 23);
@@ -329,6 +330,7 @@
             // 
             // buttonExecute
             // 
+            this.buttonExecute.Enabled = false;
             this.buttonExecute.Location = new System.Drawing.Point(93, 252);
             this.buttonExecute.Name = "buttonExecute";
             this.buttonExecute.Size = new System.Drawing.Size(75, 23);
@@ -373,31 +375,33 @@
             this.lTestFilename.TabIndex = 8;
             this.lTestFilename.Text = "brak";
             // 
-            // button1
+            // buttonLoadTrainingSet
             // 
-            this.button1.Location = new System.Drawing.Point(185, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Wczytaj";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonLoadTrainingSet.Location = new System.Drawing.Point(185, 9);
+            this.buttonLoadTrainingSet.Name = "buttonLoadTrainingSet";
+            this.buttonLoadTrainingSet.Size = new System.Drawing.Size(75, 23);
+            this.buttonLoadTrainingSet.TabIndex = 9;
+            this.buttonLoadTrainingSet.Text = "Wczytaj";
+            this.buttonLoadTrainingSet.UseVisualStyleBackColor = true;
+            this.buttonLoadTrainingSet.Click += new System.EventHandler(this.buttonLoadTrainingSet_Click);
             // 
-            // button2
+            // buttonLoadTestSet
             // 
-            this.button2.Location = new System.Drawing.Point(185, 38);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Wczytaj";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonLoadTestSet.Location = new System.Drawing.Point(185, 38);
+            this.buttonLoadTestSet.Name = "buttonLoadTestSet";
+            this.buttonLoadTestSet.Size = new System.Drawing.Size(75, 23);
+            this.buttonLoadTestSet.TabIndex = 10;
+            this.buttonLoadTestSet.Text = "Wczytaj";
+            this.buttonLoadTestSet.UseVisualStyleBackColor = true;
+            this.buttonLoadTestSet.Click += new System.EventHandler(this.buttonLoadTestSet_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 343);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonLoadTestSet);
+            this.Controls.Add(this.buttonLoadTrainingSet);
             this.Controls.Add(this.lTestFilename);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.buttonExecute);
@@ -452,8 +456,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lTestFilename;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonLoadTrainingSet;
+        private System.Windows.Forms.Button buttonLoadTestSet;
     }
 }
 
