@@ -192,3 +192,4 @@ MLP/packages/encog-dotnet-core.3.3.0/lib/net35/encog-core-cs.dll
 MLP/packages/encog-dotnet-core.3.3.0/NuGet.exe
 *.RData
 .RData
+.Rhistory

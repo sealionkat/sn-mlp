@@ -17,6 +17,10 @@ namespace MLPGui
         public Main()
         {
             InitializeComponent();
+
+            this.comboBoxActFun.SelectedIndex = 0;
+            this.comboBoxProblem.SelectedIndex = 0;
+            this.comboBoxLayerNo.SelectedIndex = 0;
         }
 
         // reading files

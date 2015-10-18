@@ -31,11 +31,6 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolSSLStatusTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolSSLStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemLoadFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxOpts = new System.Windows.Forms.GroupBox();
             this.comboBoxProblem = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -54,11 +49,16 @@
             this.numericUDLayers = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lTrainingFilename = new System.Windows.Forms.Label();
             this.buttonLearn = new System.Windows.Forms.Button();
             this.buttonExecute = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comboBoxLayerNo = new System.Windows.Forms.ComboBox();
+            this.lTestFilename = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
-            this.menuStrip.SuspendLayout();
             this.groupBoxOpts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDIterations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDNeurons)).BeginInit();
@@ -88,49 +88,12 @@
             this.toolSSLStatus.Size = new System.Drawing.Size(47, 17);
             this.toolSSLStatus.Text = "gotowy";
             // 
-            // menuStrip
-            // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.plikToolStripMenuItem});
-            this.menuStrip.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(627, 24);
-            this.menuStrip.TabIndex = 1;
-            this.menuStrip.Text = "menuStrip";
-            // 
-            // plikToolStripMenuItem
-            // 
-            this.plikToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemLoadFile,
-            this.toolStripSeparator1,
-            this.toolStripMenuItemClose});
-            this.plikToolStripMenuItem.Name = "plikToolStripMenuItem";
-            this.plikToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
-            this.plikToolStripMenuItem.Text = "Plik";
-            // 
-            // toolStripMenuItemLoadFile
-            // 
-            this.toolStripMenuItemLoadFile.Name = "toolStripMenuItemLoadFile";
-            this.toolStripMenuItemLoadFile.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemLoadFile.Text = "Wczytaj plik";
-            this.toolStripMenuItemLoadFile.Click += new System.EventHandler(this.ToolStripMenuItemLoadFile_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // toolStripMenuItemClose
-            // 
-            this.toolStripMenuItemClose.Name = "toolStripMenuItemClose";
-            this.toolStripMenuItemClose.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemClose.Text = "Wyjście";
-            this.toolStripMenuItemClose.Click += new System.EventHandler(this.ToolStripMenuItemClose_Click);
-            // 
             // groupBoxOpts
             // 
             this.groupBoxOpts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOpts.Controls.Add(this.comboBoxLayerNo);
+            this.groupBoxOpts.Controls.Add(this.label12);
             this.groupBoxOpts.Controls.Add(this.comboBoxProblem);
             this.groupBoxOpts.Controls.Add(this.label10);
             this.groupBoxOpts.Controls.Add(this.textBoxInertCoeff);
@@ -147,7 +110,7 @@
             this.groupBoxOpts.Controls.Add(this.label4);
             this.groupBoxOpts.Controls.Add(this.numericUDLayers);
             this.groupBoxOpts.Controls.Add(this.label3);
-            this.groupBoxOpts.Location = new System.Drawing.Point(12, 65);
+            this.groupBoxOpts.Location = new System.Drawing.Point(12, 78);
             this.groupBoxOpts.Name = "groupBoxOpts";
             this.groupBoxOpts.Size = new System.Drawing.Size(601, 168);
             this.groupBoxOpts.TabIndex = 2;
@@ -208,7 +171,7 @@
             // 
             // numericUDIterations
             // 
-            this.numericUDIterations.Location = new System.Drawing.Point(463, 46);
+            this.numericUDIterations.Location = new System.Drawing.Point(10, 101);
             this.numericUDIterations.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -231,7 +194,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(460, 29);
+            this.label7.Location = new System.Drawing.Point(7, 85);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 8;
@@ -240,7 +203,7 @@
             // checkBoxBias
             // 
             this.checkBoxBias.AutoSize = true;
-            this.checkBoxBias.Location = new System.Drawing.Point(40, 85);
+            this.checkBoxBias.Location = new System.Drawing.Point(39, 136);
             this.checkBoxBias.Name = "checkBoxBias";
             this.checkBoxBias.Size = new System.Drawing.Size(15, 14);
             this.checkBoxBias.TabIndex = 7;
@@ -249,7 +212,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 83);
+            this.label6.Location = new System.Drawing.Point(7, 136);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(27, 13);
             this.label6.TabIndex = 6;
@@ -261,7 +224,7 @@
             this.comboBoxActFun.Items.AddRange(new object[] {
             "unipolarna",
             "bipolarna"});
-            this.comboBoxActFun.Location = new System.Drawing.Point(309, 45);
+            this.comboBoxActFun.Location = new System.Drawing.Point(463, 44);
             this.comboBoxActFun.Name = "comboBoxActFun";
             this.comboBoxActFun.Size = new System.Drawing.Size(121, 21);
             this.comboBoxActFun.TabIndex = 5;
@@ -269,7 +232,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(306, 29);
+            this.label5.Location = new System.Drawing.Point(460, 29);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(92, 13);
             this.label5.TabIndex = 4;
@@ -277,7 +240,7 @@
             // 
             // numericUDNeurons
             // 
-            this.numericUDNeurons.Location = new System.Drawing.Point(147, 45);
+            this.numericUDNeurons.Location = new System.Drawing.Point(310, 44);
             this.numericUDNeurons.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -300,7 +263,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(144, 29);
+            this.label4.Location = new System.Drawing.Point(306, 29);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(143, 13);
             this.label4.TabIndex = 2;
@@ -340,24 +303,24 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 37);
+            this.label1.Location = new System.Drawing.Point(18, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
+            this.label1.Size = new System.Drawing.Size(130, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Wczytany plik:";
+            this.label1.Text = "Wczytany plik treningowy:";
             // 
-            // label2
+            // lTrainingFilename
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(99, 37);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "brak";
+            this.lTrainingFilename.AutoSize = true;
+            this.lTrainingFilename.Location = new System.Drawing.Point(150, 14);
+            this.lTrainingFilename.Name = "lTrainingFilename";
+            this.lTrainingFilename.Size = new System.Drawing.Size(28, 13);
+            this.lTrainingFilename.TabIndex = 4;
+            this.lTrainingFilename.Text = "brak";
             // 
             // buttonLearn
             // 
-            this.buttonLearn.Location = new System.Drawing.Point(12, 248);
+            this.buttonLearn.Location = new System.Drawing.Point(12, 252);
             this.buttonLearn.Name = "buttonLearn";
             this.buttonLearn.Size = new System.Drawing.Size(75, 23);
             this.buttonLearn.TabIndex = 5;
@@ -366,34 +329,89 @@
             // 
             // buttonExecute
             // 
-            this.buttonExecute.Location = new System.Drawing.Point(93, 248);
+            this.buttonExecute.Location = new System.Drawing.Point(93, 252);
             this.buttonExecute.Name = "buttonExecute";
             this.buttonExecute.Size = new System.Drawing.Size(75, 23);
             this.buttonExecute.TabIndex = 6;
             this.buttonExecute.Text = "Uruchom";
             this.buttonExecute.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(19, 43);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(115, 13);
+            this.label11.TabIndex = 7;
+            this.label11.Text = "Wczytany plik testowy:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(147, 28);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(79, 13);
+            this.label12.TabIndex = 16;
+            this.label12.Text = "Numer warstwy";
+            // 
+            // comboBoxLayerNo
+            // 
+            this.comboBoxLayerNo.FormattingEnabled = true;
+            this.comboBoxLayerNo.Items.AddRange(new object[] {
+            "1"});
+            this.comboBoxLayerNo.Location = new System.Drawing.Point(147, 43);
+            this.comboBoxLayerNo.Name = "comboBoxLayerNo";
+            this.comboBoxLayerNo.Size = new System.Drawing.Size(120, 21);
+            this.comboBoxLayerNo.TabIndex = 17;
+            // 
+            // lTestFilename
+            // 
+            this.lTestFilename.AutoSize = true;
+            this.lTestFilename.Location = new System.Drawing.Point(150, 43);
+            this.lTestFilename.Name = "lTestFilename";
+            this.lTestFilename.Size = new System.Drawing.Size(28, 13);
+            this.lTestFilename.TabIndex = 8;
+            this.lTestFilename.Text = "brak";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(185, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Wczytaj";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(185, 38);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "Wczytaj";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 343);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.lTestFilename);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.buttonExecute);
             this.Controls.Add(this.buttonLearn);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lTrainingFilename);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBoxOpts);
             this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.menuStrip);
-            this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(643, 382);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MLP Encog";
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            this.menuStrip.ResumeLayout(false);
-            this.menuStrip.PerformLayout();
             this.groupBoxOpts.ResumeLayout(false);
             this.groupBoxOpts.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDIterations)).EndInit();
@@ -409,14 +427,11 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolSSLStatusTxt;
         private System.Windows.Forms.ToolStripStatusLabel toolSSLStatus;
-        private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.ToolStripMenuItem plikToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClose;
         private System.Windows.Forms.GroupBox groupBoxOpts;
         private System.Windows.Forms.NumericUpDown numericUDLayers;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lTrainingFilename;
         private System.Windows.Forms.ComboBox comboBoxProblem;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox textBoxInertCoeff;
@@ -433,8 +448,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonLearn;
         private System.Windows.Forms.Button buttonExecute;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLoadFile;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ComboBox comboBoxLayerNo;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lTestFilename;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
