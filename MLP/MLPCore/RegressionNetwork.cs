@@ -92,6 +92,16 @@ namespace MLPCore
 
         private Results Denormalize(double x, double y)
         {
+            double min_value = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
+            double max_value = 1.0;
+            double norm_size = max_value - min_value;
+
+            double dx_size = vmax[0] - vmin[0];
+            double dy_size = vmaxo[0] - vmino[0];
+
+            x = ((x - min_value) * dx_size / norm_size) + vmin[0];
+            y = ((y - min_value) * dy_size / norm_size) + vmino[0];
+
             return new Results(x, y, 0);
         }
 
