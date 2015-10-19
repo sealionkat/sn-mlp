@@ -49,8 +49,12 @@ namespace MLPCore
 
             train_csv.Close();
 
-            Analyze(ref train_input);
-            Normalize(ref train_input);
+            Analyze(ref train_input, ref vmin, ref vmax);
+            Normalize(ref train_input, ref vmin, ref vmax);
+
+            Analyze(ref train_ideal, ref vmino, ref vmaxo);
+            Normalize(ref train_ideal, ref vmino, ref vmaxo);
+
             Randomize(ref train_input, ref train_ideal);
 
             int validation_size = train_input.Count / 10;
@@ -77,13 +81,18 @@ namespace MLPCore
             test_csv.Close();
 
             //Analyze(ref test_input);
-            Normalize(ref test_input);
+            Normalize(ref test_input, ref vmin, ref vmax);
 
             testData = new List<IMLData>();
             foreach (var d in test_input)
             {
                 testData.Add(new BasicMLData(d));
             }
+        }
+
+        private Results Denormalize(double x, double y)
+        {
+            return new Results(x, y, 0);
         }
 
         public override Tuple<List<Results>, List<Results>> Test(string testSetFile)
@@ -96,7 +105,7 @@ namespace MLPCore
             {
                 var d = network.Compute(dd);
 
-                res.Add(new Results(dd[0], d[0], 0));
+                res.Add(Denormalize(dd[0], d[0]));
                 //Console.WriteLine("[{0}: {1}]", dd[0], d[0]);
             }
 

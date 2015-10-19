@@ -51,8 +51,9 @@ namespace MLPCore
 
             List<double[]> train_ideal = MakeIdealFromInput(train_ideal_class);
 
-            Analyze(ref train_input);
-            Normalize(ref train_input);
+            Analyze(ref train_input, ref vmin, ref vmax);
+            Normalize(ref train_input, ref vmin, ref vmax);
+
             Randomize(ref train_input, ref train_ideal);
 
             int validation_size = train_input.Count / 10;
@@ -80,7 +81,7 @@ namespace MLPCore
             test_csv.Close();
 
             //Analyze(ref test_input);
-            Normalize(ref test_input);
+            Normalize(ref test_input, ref vmin, ref vmax);
 
             testData = new List<IMLData>();
             foreach (var d in test_input)

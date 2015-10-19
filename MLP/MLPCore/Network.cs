@@ -28,7 +28,7 @@ namespace MLPCore
         protected List<double[]> test_input_orig;
         protected List<Results> train_input_orig;
 
-        protected double[] vmin, vmax;
+        protected double[] vmin, vmax, vmino, vmaxo;
         protected ActivationFunctionType fType;
 
         protected abstract int FirstLayerNeuronCount { get; }
@@ -75,31 +75,31 @@ namespace MLPCore
             return train_ideal;
         }
 
-        protected void Analyze(ref List<double[]> data)
+        protected void Analyze(ref List<double[]> data, ref double[] dmin, ref double[] dmax)
         {
-            vmin = new double[data[0].Length];
-            vmax = new double[data[0].Length];
+            dmin = new double[data[0].Length];
+            dmax = new double[data[0].Length];
 
             for (int i = 0; i < data[0].Length; ++i)
             {
-                vmin[i] = double.PositiveInfinity;
-                vmax[i] = double.NegativeInfinity;
+                dmin[i] = double.PositiveInfinity;
+                dmax[i] = double.NegativeInfinity;
             }
 
             foreach (double[] item in data)
             {
                 for (int i = 0; i < item.Length; ++i)
                 {
-                    if (item[i] < vmin[i])
-                        vmin[i] = item[i];
+                    if (item[i] < dmin[i])
+                        dmin[i] = item[i];
 
-                    if (item[i] > vmax[i])
-                        vmax[i] = item[i];
+                    if (item[i] > dmax[i])
+                        dmax[i] = item[i];
                 }
             }
         }
 
-        protected void Normalize(ref List<double[]> data)
+        protected void Normalize(ref List<double[]> data, ref double[] dmin, ref double[] dmax)
         {
             double min_value = (fType == ActivationFunctionType.BiPolar) ? -1.0 : 0.0;
             double max_value = 1.0;
@@ -107,11 +107,11 @@ namespace MLPCore
 
             for (int i = 0; i < data[0].Length; ++i)
             {
-                double d_size = vmax[i] - vmin[i];
+                double d_size = dmax[i] - dmin[i];
 
                 foreach (double[] item in data)
                 {
-                    item[i] = ((item[i] - vmin[i]) * norm_size / d_size) + min_value;
+                    item[i] = ((item[i] - dmin[i]) * norm_size / d_size) + min_value;
                 }
             }
         }
