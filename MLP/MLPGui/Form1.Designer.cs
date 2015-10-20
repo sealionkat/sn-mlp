@@ -119,9 +119,8 @@
             // 
             // comboBoxLayerNo
             // 
+            this.comboBoxLayerNo.Enabled = false;
             this.comboBoxLayerNo.FormattingEnabled = true;
-            this.comboBoxLayerNo.Items.AddRange(new object[] {
-            "1"});
             this.comboBoxLayerNo.Location = new System.Drawing.Point(147, 43);
             this.comboBoxLayerNo.Name = "comboBoxLayerNo";
             this.comboBoxLayerNo.Size = new System.Drawing.Size(120, 21);
@@ -133,9 +132,9 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(147, 28);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(79, 13);
+            this.label12.Size = new System.Drawing.Size(103, 13);
             this.label12.TabIndex = 16;
-            this.label12.Text = "Numer warstwy";
+            this.label12.Text = "Numer dod. warstwy";
             // 
             // comboBoxProblem
             // 
@@ -208,7 +207,7 @@
             this.numericUDIterations.Size = new System.Drawing.Size(120, 20);
             this.numericUDIterations.TabIndex = 9;
             this.numericUDIterations.Value = new decimal(new int[] {
-            10000,
+            100,
             0,
             0,
             0});
@@ -262,6 +261,7 @@
             // 
             // numericUDNeurons
             // 
+            this.numericUDNeurons.Enabled = false;
             this.numericUDNeurons.Location = new System.Drawing.Point(310, 44);
             this.numericUDNeurons.Maximum = new decimal(new int[] {
             1000,
@@ -281,15 +281,16 @@
             0,
             0,
             0});
+            this.numericUDNeurons.ValueChanged += new System.EventHandler(this.numericUDNeurons_ValueChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(306, 29);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(143, 13);
+            this.label4.Size = new System.Drawing.Size(145, 13);
             this.label4.TabIndex = 2;
-            this.label4.Text = "Liczba neuronów w warstwie";
+            this.label4.Text = "L. neuronów w dod. warstwie";
             // 
             // numericUDLayers
             // 
@@ -299,19 +300,9 @@
             0,
             0,
             0});
-            this.numericUDLayers.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
             this.numericUDLayers.Name = "numericUDLayers";
             this.numericUDLayers.Size = new System.Drawing.Size(120, 20);
             this.numericUDLayers.TabIndex = 1;
-            this.numericUDLayers.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
             this.numericUDLayers.ValueChanged += new System.EventHandler(this.numericUDLayers_ValueChanged);
             // 
             // label3
@@ -319,9 +310,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(7, 29);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.Size = new System.Drawing.Size(98, 13);
             this.label3.TabIndex = 0;
-            this.label3.Text = "Liczba warstw";
+            this.label3.Text = "Liczba dod. warstw";
             // 
             // label1
             // 
@@ -383,7 +374,7 @@
             // 
             // buttonLoadTrainingSet
             // 
-            this.buttonLoadTrainingSet.Location = new System.Drawing.Point(185, 9);
+            this.buttonLoadTrainingSet.Location = new System.Drawing.Point(540, 9);
             this.buttonLoadTrainingSet.Name = "buttonLoadTrainingSet";
             this.buttonLoadTrainingSet.Size = new System.Drawing.Size(75, 23);
             this.buttonLoadTrainingSet.TabIndex = 9;
@@ -393,7 +384,7 @@
             // 
             // buttonLoadTestSet
             // 
-            this.buttonLoadTestSet.Location = new System.Drawing.Point(185, 38);
+            this.buttonLoadTestSet.Location = new System.Drawing.Point(540, 38);
             this.buttonLoadTestSet.Name = "buttonLoadTestSet";
             this.buttonLoadTestSet.Size = new System.Drawing.Size(75, 23);
             this.buttonLoadTestSet.TabIndex = 10;
@@ -416,6 +407,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBoxOpts);
             this.Controls.Add(this.statusStrip);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(643, 382);
             this.MinimumSize = new System.Drawing.Size(643, 382);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

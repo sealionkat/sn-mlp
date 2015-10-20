@@ -18,9 +18,14 @@ namespace MLPGui
     {
         private string trainingFilename = "..\\..\\..\\..\\data\\data.train.csv";
         private string testFilename = "..\\..\\..\\..\\data\\data.test.csv";
-        private List<int> layers = new List<int>() { };
-        Network reg = null;
-        Network cl = null;
+        private List<int> neuronLayers = new List<int>() { };
+        private Network reg = null;
+        private Network cl = null;
+        private string classFileName = "class.csv";
+        private string regressionFnFileName = "regression_fun.csv";
+        private string regressionErrFileName = "regression_err.csv";
+        private bool trained = false;
+        private bool testFileLoaded = false;
 
         public Main()
         {
@@ -28,7 +33,7 @@ namespace MLPGui
 
             this.comboBoxActFun.SelectedIndex = 0;
             this.comboBoxProblem.SelectedIndex = 0;
-            this.comboBoxLayerNo.SelectedIndex = 0;
+            //this.comboBoxLayerNo.SelectedIndex = 0;
         }
 
         private void getNeuronsCount()
@@ -48,6 +53,7 @@ namespace MLPGui
                 new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
                 cl.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
                 this.toolSSLStatus.Text = "gotowe...";
+                trained = true;
             }
             else
             {
@@ -124,6 +130,8 @@ namespace MLPGui
                 }
 
                 this.toolSSLStatus.Text = "gotowe...";
+
+                trained = true;
             }
             else
             {
@@ -205,7 +213,7 @@ namespace MLPGui
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                toolSSLStatus.Text = "wczytywanie pliku...";
+                this.toolSSLStatus.Text = "wczytywanie pliku...";
 
                 BackgroundWorker bgWorker = new BackgroundWorker();
                 bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
@@ -230,8 +238,6 @@ namespace MLPGui
                 this.lTrainingFilename.Text = ofd.FileName; 
                 trainingFilename = ofd.FileName;
                 this.buttonLearn.Enabled = true;
-
-                
             }
         }
 
@@ -249,13 +255,41 @@ namespace MLPGui
                 this.lTestFilename.Text = ofd.FileName;
                 testFilename = ofd.FileName;
 
-                this.buttonExecute.Enabled = this.buttonLearn.Enabled;
+               this.buttonExecute.Enabled = trained && this.buttonLearn.Enabled;
+               testFileLoaded = true;
                 
             }
         }
 
         private void numericUDLayers_ValueChanged(object sender, EventArgs e)
         {
+            var layersNo = (int)this.numericUDLayers.Value;
+            neuronLayers = new List<int>() { };
+            var layers = new decimal[layersNo];
+
+            this.comboBoxLayerNo.Items.Clear();
+
+            if (layersNo > 0)
+            {
+                this.comboBoxLayerNo.Enabled = true;
+                this.numericUDNeurons.Enabled = true;
+            }
+            else
+            {
+                this.comboBoxLayerNo.Enabled = false;
+                this.numericUDNeurons.Enabled = false;
+                return;
+            }
+            
+
+            for (var i = 0; i < layersNo; ++i)
+            {
+                layers[i] = i + 1;
+                neuronLayers.Add(1);
+                this.comboBoxLayerNo.Items.Add(i + 1);
+            }
+
+            this.comboBoxLayerNo.SelectedIndex = 0;
 
         }
 
@@ -266,7 +300,7 @@ namespace MLPGui
 
         private void buttonLearn_Click(object sender, EventArgs e)
         {
-            toolSSLStatus.Text = "uczenie...";
+            this.toolSSLStatus.Text = "uczenie...";
             if (this.comboBoxProblem.SelectedIndex == 0) //classification
             {
                 runClassification(true);
@@ -275,11 +309,13 @@ namespace MLPGui
             {
                 runRegression(true);
             }
+
+            this.buttonExecute.Enabled = trained && this.buttonLearn.Enabled && testFileLoaded;
         }
 
         private void buttonExecute_Click(object sender, EventArgs e)
         {
-            toolSSLStatus.Text = "obliczanie...";
+            this.toolSSLStatus.Text = "obliczanie...";
             if (this.comboBoxProblem.SelectedIndex == 0) //classification
             {
                 runClassification(false);
@@ -288,6 +324,11 @@ namespace MLPGui
             {
                 runRegression(false);
             }
+        }
+
+        private void numericUDNeurons_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
