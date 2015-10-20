@@ -9,6 +9,7 @@ print(args);
 
 errFile <- args[1];
 fnFile <- args[2];
+trFile <- args[3];
 
 # error plot first...
 
@@ -20,6 +21,13 @@ dev.off();
 
 # ...and then function plot
 
-#png(filename="classification_fun.png");
+png(filename="../classification_fun.png");
+fn <- readcsv(fnFile);
+tr <- readcsv(trFile);
 
-#dev.off();
+fnCl <- prepare_classes(fn);
+trCl <- prepare_classes(tr);
+
+class_plot(trCl$clX, trCl$clY, fnCl$clX, fnCl$clY);
+
+dev.off();

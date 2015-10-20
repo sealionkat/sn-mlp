@@ -109,6 +109,7 @@ namespace MLPCore
                 }
 
                 res.Add(new Results(test_input_orig[j][0], test_input_orig[j][1], cls));
+                ++j;
             }
 
             return new Tuple<List<Results>, List<Results>>(res, train_input_orig);

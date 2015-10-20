@@ -185,7 +185,7 @@ namespace MLPCore
                 double val_error = network.CalculateError(validationData);
                 error.Add(new Tuple<int, double, double>(i, training.Error, val_error));
                 //if(i%100 == 0)
-                    Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
+                    //Console.WriteLine("{0}: [{1}; {2}]", i, training.Error, val_error);
             }
 
             training.FinishTraining();

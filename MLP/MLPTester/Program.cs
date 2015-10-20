@@ -11,17 +11,17 @@ namespace MLPTester
     {
         static void Main(string[] args)
         {
-            /*Network n = new ClassificationNetwork("..\\..\\..\\..\\data\\data.train.csv", 
+            Network n = new ClassificationNetwork("..\\..\\..\\..\\data\\data.train.csv", 
                 new List<int>() { 8 }, Network.ActivationFunctionType.BiPolar, true);
 
-            n.Train(10000, 0.01, 0.1);
-            n.Test("..\\..\\..\\..\\data\\data.test.csv");*/
+            n.Train(1000, 0.01, 0.1);
+            n.Test("..\\..\\..\\..\\data\\data.test.csv");
 
-            Network n = new RegressionNetwork("..\\..\\..\\..\\data\\data.xsq.train.csv", 
+            /*Network n = new RegressionNetwork("..\\..\\..\\..\\data\\data.xsq.train.csv", 
                 new List<int>() { 8 }, Network.ActivationFunctionType.UniPolar, true);
 
             n.Train(100000, 0.01, 0.1);
-            n.Test("..\\..\\..\\..\\data\\data.xsq.test.csv");
+            n.Test("..\\..\\..\\..\\data\\data.xsq.test.csv");*/
         }
     }
 }
