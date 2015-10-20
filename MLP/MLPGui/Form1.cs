@@ -45,8 +45,6 @@ namespace MLPGui
         {
             var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
 
-            
-
             if (learning)
             {
                 cl = new ClassificationNetwork(trainingFilename,
@@ -82,7 +80,7 @@ namespace MLPGui
                     }
                     catch (Exception)
                     {
-
+                        MessageBox.Show("Nie udało się zapisać pliku.");
                     }
                 }
 
@@ -94,7 +92,7 @@ namespace MLPGui
         {
             var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
 
-            
+
 
             if (learning)
             {
@@ -107,8 +105,9 @@ namespace MLPGui
                 var resp = dialog.ShowDialog();
                 if (resp == DialogResult.OK)
                 {
-                    try {
-                    
+                    try
+                    {
+
                         var csv = new StringBuilder();
 
                         var firstLine = "it, y1, y2\n";
@@ -123,14 +122,15 @@ namespace MLPGui
                         File.WriteAllText(dialog.FileName, csv.ToString());
                         MessageBox.Show("Zapisano plik " + dialog.FileName);
 
-                        
-                    } catch(Exception) {
 
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie udało się zapisać pliku");
                     }
                 }
 
                 this.toolSSLStatus.Text = "gotowe...";
-
                 trained = true;
             }
             else
@@ -158,68 +158,15 @@ namespace MLPGui
                         File.WriteAllText(dialog.FileName, csv.ToString());
                         MessageBox.Show("Zapisano plik " + dialog.FileName);
 
-                        
-                    } catch(Exception) {
 
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie udało się zapisać pliku");
                     }
                 }
 
                 this.toolSSLStatus.Text = "gotowe...";
-            }
-        }
-
-        // reading files
-        private void bgWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            string csvToRead = (string)e.Argument;
-            using (StreamReader sr = new StreamReader(csvToRead))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-
-                }
-                //e.Result = 
-            } 
-        }
-
-        private void bgWorker_RunWorker(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                MessageBox.Show(e.Error.Message);
-            }
-            else
-            {
-                //e.Result
-            }
-        }
-        //-----------------------
-
-
-
-        private void ToolStripMenuItemClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void ToolStripMenuItemLoadFile_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.DefaultExt = "csv";
-            ofd.Filter = "csv files (*.csv)|*.csv";
-            ofd.FilterIndex = 2;
-            ofd.RestoreDirectory = true;
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                this.toolSSLStatus.Text = "wczytywanie pliku...";
-
-                BackgroundWorker bgWorker = new BackgroundWorker();
-                bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
-                bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorker);
-
-                bgWorker.RunWorkerAsync(ofd.FileName);
             }
         }
 
@@ -233,9 +180,7 @@ namespace MLPGui
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                
-
-                this.lTrainingFilename.Text = ofd.FileName; 
+                this.lTrainingFilename.Text = ofd.FileName;
                 trainingFilename = ofd.FileName;
                 this.buttonLearn.Enabled = true;
             }
@@ -251,13 +196,11 @@ namespace MLPGui
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                
                 this.lTestFilename.Text = ofd.FileName;
                 testFilename = ofd.FileName;
 
-               this.buttonExecute.Enabled = trained && this.buttonLearn.Enabled;
-               testFileLoaded = true;
-                
+                this.buttonExecute.Enabled = trained && this.buttonLearn.Enabled;
+                testFileLoaded = true;
             }
         }
 
@@ -280,7 +223,7 @@ namespace MLPGui
                 this.numericUDNeurons.Enabled = false;
                 return;
             }
-            
+
 
             for (var i = 0; i < layersNo; ++i)
             {
@@ -295,7 +238,7 @@ namespace MLPGui
 
         private void comboBoxLayerNo_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            this.numericUDNeurons.Value = neuronLayers[this.comboBoxLayerNo.SelectedIndex];
         }
 
         private void buttonLearn_Click(object sender, EventArgs e)
@@ -328,7 +271,7 @@ namespace MLPGui
 
         private void numericUDNeurons_ValueChanged(object sender, EventArgs e)
         {
-
+            neuronLayers[this.comboBoxLayerNo.SelectedIndex] = (int)this.numericUDNeurons.Value;
         }
     }
 }
