@@ -21,7 +21,8 @@ namespace MLPGui
         private List<int> neuronLayers = new List<int>() { };
         private Network reg = null;
         private Network cl = null;
-        private string classFileName = "class.csv";
+        private string classificationFileName = "classification.csv";
+        private string classificationErrFileName = "classification_err.csv";
         private string regressionFnFileName = "regression_fun.csv";
         private string regressionErrFileName = "regression_err.csv";
         private bool trained = false;
@@ -33,7 +34,6 @@ namespace MLPGui
 
             this.comboBoxActFun.SelectedIndex = 0;
             this.comboBoxProblem.SelectedIndex = 0;
-            //this.comboBoxLayerNo.SelectedIndex = 0;
         }
 
         private void getNeuronsCount()
@@ -48,20 +48,40 @@ namespace MLPGui
             if (learning)
             {
                 cl = new ClassificationNetwork(trainingFilename,
-                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
-                cl.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+                neuronLayers, actFun, this.checkBoxBias.Checked);
+                var result = cl.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+
+                try
+                {
+
+                    var csv = new StringBuilder();
+
+                    var firstLine = "it, y1, y2\n";
+                    csv.Append(firstLine);
+
+                    foreach (var row in result)
+                    {
+                        var newline = string.Format("{0},{1},{2}\n", row.Item1, row.Item2.ToString().Replace(",", "."), row.Item3.ToString().Replace(",", "."));
+                        csv.Append(newline);
+                    }
+
+                    File.WriteAllText(classificationErrFileName, csv.ToString());
+                    MessageBox.Show("Zapisano plik " + classificationErrFileName);
+
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Nie udało się zapisać pliku");
+                }
+
                 this.toolSSLStatus.Text = "gotowe...";
                 trained = true;
+                MessageBox.Show("Skończono naukę");
             }
             else
             {
                 var result = cl.Test(testFilename);
-
-                var dialog = new SaveFileDialog();
-                dialog.Filter = "Plik CSV (*.csv)|*.csv";
-                var resp = dialog.ShowDialog();
-                if (resp == DialogResult.OK)
-                {
                     try
                     {
                         var csv = new StringBuilder();
@@ -75,14 +95,13 @@ namespace MLPGui
                             csv.Append(newline);
                         }
 
-                        File.WriteAllText(dialog.FileName, csv.ToString());
-                        MessageBox.Show("Zapisano plik " + dialog.FileName);
+                        File.WriteAllText(classificationFileName, csv.ToString());
+                        MessageBox.Show("Zapisano plik " + classificationFileName);
                     }
                     catch (Exception)
                     {
                         MessageBox.Show("Nie udało się zapisać pliku.");
                     }
-                }
 
                 this.toolSSLStatus.Text = "gotowe...";
             }
@@ -92,19 +111,12 @@ namespace MLPGui
         {
             var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
 
-
-
             if (learning)
             {
                 reg = new RegressionNetwork(trainingFilename,
-                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
+                neuronLayers, actFun, this.checkBoxBias.Checked);
                 var result = reg.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
 
-                var dialog = new SaveFileDialog();
-                dialog.Filter = "Plik CSV (*.csv)|*.csv";
-                var resp = dialog.ShowDialog();
-                if (resp == DialogResult.OK)
-                {
                     try
                     {
 
@@ -119,8 +131,8 @@ namespace MLPGui
                             csv.Append(newline);
                         }
 
-                        File.WriteAllText(dialog.FileName, csv.ToString());
-                        MessageBox.Show("Zapisano plik " + dialog.FileName);
+                        File.WriteAllText(regressionErrFileName, csv.ToString());
+                        MessageBox.Show("Zapisano plik " + regressionErrFileName);
 
 
                     }
@@ -128,20 +140,15 @@ namespace MLPGui
                     {
                         MessageBox.Show("Nie udało się zapisać pliku");
                     }
-                }
 
                 this.toolSSLStatus.Text = "gotowe...";
                 trained = true;
+                MessageBox.Show("Skończono naukę");
             }
             else
             {
                 var result = reg.Test(testFilename);
 
-                var dialog = new SaveFileDialog();
-                dialog.Filter = "Plik CSV (*.csv)|*.csv";
-                var resp = dialog.ShowDialog();
-                if (resp == DialogResult.OK)
-                {
                     try
                     {
                         var csv = new StringBuilder();
@@ -155,8 +162,8 @@ namespace MLPGui
                             csv.Append(newline);
                         }
 
-                        File.WriteAllText(dialog.FileName, csv.ToString());
-                        MessageBox.Show("Zapisano plik " + dialog.FileName);
+                        File.WriteAllText(regressionFnFileName, csv.ToString());
+                        MessageBox.Show("Zapisano plik " + regressionFnFileName);
 
 
                     }
@@ -164,7 +171,6 @@ namespace MLPGui
                     {
                         MessageBox.Show("Nie udało się zapisać pliku");
                     }
-                }
 
                 this.toolSSLStatus.Text = "gotowe...";
             }
