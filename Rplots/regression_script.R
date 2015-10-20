@@ -9,6 +9,7 @@ print(args);
 
 errFile <- args[1];
 fnFile <- args[2];
+trFile <- args[3];
 
 # error plot first...
 
@@ -20,6 +21,8 @@ dev.off();
 
 # ...and then function plot
 
-#png(filename="reg_fun.png");
-
-#dev.off();
+png(filename="../regression_fun.png");
+fn <- readcsv(fnFile);
+tr <- readcsv(trFile);
+fn_plot(tr$x, tr$y, fn$x, fn$y);
+dev.off();
