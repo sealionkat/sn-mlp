@@ -32,6 +32,8 @@
             this.toolSSLStatusTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolSSLStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBoxOpts = new System.Windows.Forms.GroupBox();
+            this.comboBoxLayerNo = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.comboBoxProblem = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.textBoxInertCoeff = new System.Windows.Forms.TextBox();
@@ -53,8 +55,6 @@
             this.buttonLearn = new System.Windows.Forms.Button();
             this.buttonExecute = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.comboBoxLayerNo = new System.Windows.Forms.ComboBox();
             this.lTestFilename = new System.Windows.Forms.Label();
             this.buttonLoadTrainingSet = new System.Windows.Forms.Button();
             this.buttonLoadTestSet = new System.Windows.Forms.Button();
@@ -117,6 +117,26 @@
             this.groupBoxOpts.TabStop = false;
             this.groupBoxOpts.Text = "Opcje sieci MLP";
             // 
+            // comboBoxLayerNo
+            // 
+            this.comboBoxLayerNo.FormattingEnabled = true;
+            this.comboBoxLayerNo.Items.AddRange(new object[] {
+            "1"});
+            this.comboBoxLayerNo.Location = new System.Drawing.Point(147, 43);
+            this.comboBoxLayerNo.Name = "comboBoxLayerNo";
+            this.comboBoxLayerNo.Size = new System.Drawing.Size(120, 21);
+            this.comboBoxLayerNo.TabIndex = 17;
+            this.comboBoxLayerNo.SelectedIndexChanged += new System.EventHandler(this.comboBoxLayerNo_SelectedIndexChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(147, 28);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(79, 13);
+            this.label12.TabIndex = 16;
+            this.label12.Text = "Numer warstwy";
+            // 
             // comboBoxProblem
             // 
             this.comboBoxProblem.FormattingEnabled = true;
@@ -143,6 +163,7 @@
             this.textBoxInertCoeff.Name = "textBoxInertCoeff";
             this.textBoxInertCoeff.Size = new System.Drawing.Size(121, 20);
             this.textBoxInertCoeff.TabIndex = 13;
+            this.textBoxInertCoeff.Text = "0.1";
             // 
             // label9
             // 
@@ -159,6 +180,7 @@
             this.textBoxLearnCoeff.Name = "textBoxLearnCoeff";
             this.textBoxLearnCoeff.Size = new System.Drawing.Size(120, 20);
             this.textBoxLearnCoeff.TabIndex = 11;
+            this.textBoxLearnCoeff.Text = "0.01";
             // 
             // label8
             // 
@@ -290,6 +312,7 @@
             0,
             0,
             0});
+            this.numericUDLayers.ValueChanged += new System.EventHandler(this.numericUDLayers_ValueChanged);
             // 
             // label3
             // 
@@ -327,6 +350,7 @@
             this.buttonLearn.TabIndex = 5;
             this.buttonLearn.Text = "Ucz";
             this.buttonLearn.UseVisualStyleBackColor = true;
+            this.buttonLearn.Click += new System.EventHandler(this.buttonLearn_Click);
             // 
             // buttonExecute
             // 
@@ -337,6 +361,7 @@
             this.buttonExecute.TabIndex = 6;
             this.buttonExecute.Text = "Uruchom";
             this.buttonExecute.UseVisualStyleBackColor = true;
+            this.buttonExecute.Click += new System.EventHandler(this.buttonExecute_Click);
             // 
             // label11
             // 
@@ -346,25 +371,6 @@
             this.label11.Size = new System.Drawing.Size(115, 13);
             this.label11.TabIndex = 7;
             this.label11.Text = "Wczytany plik testowy:";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(147, 28);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(79, 13);
-            this.label12.TabIndex = 16;
-            this.label12.Text = "Numer warstwy";
-            // 
-            // comboBoxLayerNo
-            // 
-            this.comboBoxLayerNo.FormattingEnabled = true;
-            this.comboBoxLayerNo.Items.AddRange(new object[] {
-            "1"});
-            this.comboBoxLayerNo.Location = new System.Drawing.Point(147, 43);
-            this.comboBoxLayerNo.Name = "comboBoxLayerNo";
-            this.comboBoxLayerNo.Size = new System.Drawing.Size(120, 21);
-            this.comboBoxLayerNo.TabIndex = 17;
             // 
             // lTestFilename
             // 

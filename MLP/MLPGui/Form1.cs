@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Configuration;
 using MLPCore;
+using System.Globalization;
 
 namespace MLPGui
 {
@@ -17,6 +18,7 @@ namespace MLPGui
     {
         private string trainingFilename = "..\\..\\..\\..\\data\\data.train.csv";
         private string testFilename = "..\\..\\..\\..\\data\\data.test.csv";
+        private List<int> layers = new List<int>() { };
 
         public Main()
         {
@@ -29,28 +31,39 @@ namespace MLPGui
 
         private void runClassification(bool learning)
         {
+            var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
+
             Network n = new ClassificationNetwork(trainingFilename,
-                new List<int>() { 8 }, Network.ActivationFunctionType.BiPolar, true);
+                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
 
             if (learning)
             {
-                n.Train(10000, 0.01, 0.1);
+                n.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+                this.toolSSLStatus.Text = "gotowe...";
             }
             else
             {
                 n.Test(testFilename);
+                this.toolSSLStatus.Text = "gotowe...";
             }
         }
 
         private void runRegression(bool learning)
         {
+            var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
+
+            Network n = new ClassificationNetwork(trainingFilename,
+                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
+
             if (learning)
             {
-
+                n.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+                this.toolSSLStatus.Text = "gotowe...";
             }
             else
             {
-
+                n.Test(testFilename);
+                this.toolSSLStatus.Text = "gotowe...";
             }
         }
 
@@ -119,16 +132,13 @@ namespace MLPGui
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                toolSSLStatus.Text = "uczenie...";
+                
 
-                if (this.comboBoxProblem.SelectedIndex == 0) //classification
-                {
-                    runClassification(true);
-                }
-                else //regression
-                {
-                    runRegression(true);
-                }
+                this.lTrainingFilename.Text = ofd.FileName; 
+                trainingFilename = ofd.FileName;
+                this.buttonLearn.Enabled = true;
+
+                
             }
         }
 
@@ -142,15 +152,48 @@ namespace MLPGui
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                toolSSLStatus.Text = "obliczanie...";
-                if (this.comboBoxProblem.SelectedIndex == 0) //classification
-                {
-                    runClassification(false);
-                }
-                else //regression
-                {
-                    runRegression(false);
-                }
+                
+                this.lTestFilename.Text = ofd.FileName;
+                testFilename = ofd.FileName;
+
+                this.buttonExecute.Enabled = this.buttonLearn.Enabled;
+                
+            }
+        }
+
+        private void numericUDLayers_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxLayerNo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonLearn_Click(object sender, EventArgs e)
+        {
+            toolSSLStatus.Text = "uczenie...";
+            if (this.comboBoxProblem.SelectedIndex == 0) //classification
+            {
+                runClassification(true);
+            }
+            else //regression
+            {
+                runRegression(true);
+            }
+        }
+
+        private void buttonExecute_Click(object sender, EventArgs e)
+        {
+            toolSSLStatus.Text = "obliczanie...";
+            if (this.comboBoxProblem.SelectedIndex == 0) //classification
+            {
+                runClassification(false);
+            }
+            else //regression
+            {
+                runRegression(false);
             }
         }
     }
