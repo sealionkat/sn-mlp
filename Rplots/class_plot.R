@@ -13,8 +13,10 @@
 class_plot <- function(trX, trY, tX, tY, minX=-1, maxX=1, minY=-1, maxY=1) {
   clCount <- length(trX);
   
-  bgcolors <- brewer.pal(clCount, 'Pastel1');
-  colors <- brewer.pal(clCount, 'Set1');
+  paletteCount <- if(clCount < 3) 3 else clCount;
+  
+  bgcolors <- brewer.pal(paletteCount, 'Pastel1');
+  colors <- brewer.pal(paletteCount, 'Set1');
   plot(NA, NA, xlab="X", ylab="Y", xlim=c(minX, maxX), ylim=c(minY, maxY));
   
   for(i in 1:clCount) {

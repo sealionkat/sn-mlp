@@ -208,7 +208,7 @@
             this.numericUDIterations.Size = new System.Drawing.Size(120, 20);
             this.numericUDIterations.TabIndex = 9;
             this.numericUDIterations.Value = new decimal(new int[] {
-            1,
+            10000,
             0,
             0,
             0});

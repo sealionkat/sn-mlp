@@ -19,6 +19,8 @@ namespace MLPGui
         private string trainingFilename = "..\\..\\..\\..\\data\\data.train.csv";
         private string testFilename = "..\\..\\..\\..\\data\\data.test.csv";
         private List<int> layers = new List<int>() { };
+        Network reg = null;
+        Network cl = null;
 
         public Main()
         {
@@ -29,21 +31,55 @@ namespace MLPGui
             this.comboBoxLayerNo.SelectedIndex = 0;
         }
 
+        private void getNeuronsCount()
+        {
+
+        }
+
         private void runClassification(bool learning)
         {
             var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
 
-            Network n = new ClassificationNetwork(trainingFilename,
-                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
+            
 
             if (learning)
             {
-                n.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+                cl = new ClassificationNetwork(trainingFilename,
+                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
+                cl.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
                 this.toolSSLStatus.Text = "gotowe...";
             }
             else
             {
-                n.Test(testFilename);
+                var result = cl.Test(testFilename);
+
+                var dialog = new SaveFileDialog();
+                dialog.Filter = "Plik CSV (*.csv)|*.csv";
+                var resp = dialog.ShowDialog();
+                if (resp == DialogResult.OK)
+                {
+                    try
+                    {
+                        var csv = new StringBuilder();
+
+                        var firstLine = "x, y, cls\n";
+                        csv.Append(firstLine);
+
+                        foreach (var row in result.Item1)
+                        {
+                            var newline = string.Format("{0},{1},{2}\n", row.X.ToString().Replace(",", "."), row.Y.ToString().Replace(",", "."), row.Class);
+                            csv.Append(newline);
+                        }
+
+                        File.WriteAllText(dialog.FileName, csv.ToString());
+                        MessageBox.Show("Zapisano plik " + dialog.FileName);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+
                 this.toolSSLStatus.Text = "gotowe...";
             }
         }
@@ -52,17 +88,74 @@ namespace MLPGui
         {
             var actFun = this.comboBoxActFun.SelectedIndex == 0 ? Network.ActivationFunctionType.UniPolar : Network.ActivationFunctionType.BiPolar;
 
-            Network n = new ClassificationNetwork(trainingFilename,
-                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
+            
 
             if (learning)
             {
-                n.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+                reg = new RegressionNetwork(trainingFilename,
+                new List<int>() { 8 }, actFun, this.checkBoxBias.Checked);
+                var result = reg.Train((int)this.numericUDIterations.Value, Double.Parse(this.textBoxLearnCoeff.Text, CultureInfo.InvariantCulture), Double.Parse(this.textBoxInertCoeff.Text, CultureInfo.InvariantCulture));
+
+                var dialog = new SaveFileDialog();
+                dialog.Filter = "Plik CSV (*.csv)|*.csv";
+                var resp = dialog.ShowDialog();
+                if (resp == DialogResult.OK)
+                {
+                    try {
+                    
+                        var csv = new StringBuilder();
+
+                        var firstLine = "it, y1, y2\n";
+                        csv.Append(firstLine);
+
+                        foreach (var row in result)
+                        {
+                            var newline = string.Format("{0},{1},{2}\n", row.Item1, row.Item2.ToString().Replace(",", "."), row.Item3.ToString().Replace(",", "."));
+                            csv.Append(newline);
+                        }
+
+                        File.WriteAllText(dialog.FileName, csv.ToString());
+                        MessageBox.Show("Zapisano plik " + dialog.FileName);
+
+                        
+                    } catch(Exception) {
+
+                    }
+                }
+
                 this.toolSSLStatus.Text = "gotowe...";
             }
             else
             {
-                n.Test(testFilename);
+                var result = reg.Test(testFilename);
+
+                var dialog = new SaveFileDialog();
+                dialog.Filter = "Plik CSV (*.csv)|*.csv";
+                var resp = dialog.ShowDialog();
+                if (resp == DialogResult.OK)
+                {
+                    try
+                    {
+                        var csv = new StringBuilder();
+
+                        var firstLine = "x, y\n";
+                        csv.Append(firstLine);
+
+                        foreach (var row in result.Item1)
+                        {
+                            var newline = string.Format("{0},{1}\n", row.X.ToString().Replace(",", "."), row.Y.ToString().Replace(",", "."));
+                            csv.Append(newline);
+                        }
+
+                        File.WriteAllText(dialog.FileName, csv.ToString());
+                        MessageBox.Show("Zapisano plik " + dialog.FileName);
+
+                        
+                    } catch(Exception) {
+
+                    }
+                }
+
                 this.toolSSLStatus.Text = "gotowe...";
             }
         }
