@@ -58,6 +58,7 @@
             this.lTestFilename = new System.Windows.Forms.Label();
             this.buttonLoadTrainingSet = new System.Windows.Forms.Button();
             this.buttonLoadTestSet = new System.Windows.Forms.Button();
+            this.buttonLaunchR = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.groupBoxOpts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDIterations)).BeginInit();
@@ -392,11 +393,23 @@
             this.buttonLoadTestSet.UseVisualStyleBackColor = true;
             this.buttonLoadTestSet.Click += new System.EventHandler(this.buttonLoadTestSet_Click);
             // 
+            // buttonLaunchR
+            // 
+            this.buttonLaunchR.Enabled = false;
+            this.buttonLaunchR.Location = new System.Drawing.Point(174, 252);
+            this.buttonLaunchR.Name = "buttonLaunchR";
+            this.buttonLaunchR.Size = new System.Drawing.Size(105, 23);
+            this.buttonLaunchR.TabIndex = 11;
+            this.buttonLaunchR.Text = "Generuj wykresy";
+            this.buttonLaunchR.UseVisualStyleBackColor = true;
+            this.buttonLaunchR.Click += new System.EventHandler(this.buttonLaunchR_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 343);
+            this.Controls.Add(this.buttonLaunchR);
             this.Controls.Add(this.buttonLoadTestSet);
             this.Controls.Add(this.buttonLoadTrainingSet);
             this.Controls.Add(this.lTestFilename);
@@ -457,6 +470,7 @@
         private System.Windows.Forms.Label lTestFilename;
         private System.Windows.Forms.Button buttonLoadTrainingSet;
         private System.Windows.Forms.Button buttonLoadTestSet;
+        private System.Windows.Forms.Button buttonLaunchR;
     }
 }
 

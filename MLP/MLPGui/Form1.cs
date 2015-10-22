@@ -97,6 +97,7 @@ namespace MLPGui
 
                         File.WriteAllText(classificationFileName, csv.ToString());
                         MessageBox.Show("Zapisano plik " + classificationFileName);
+                        this.buttonLaunchR.Enabled = true;
                     }
                     catch (Exception)
                     {
@@ -134,7 +135,6 @@ namespace MLPGui
                         File.WriteAllText(regressionErrFileName, csv.ToString());
                         MessageBox.Show("Zapisano plik " + regressionErrFileName);
 
-
                     }
                     catch (Exception)
                     {
@@ -164,6 +164,7 @@ namespace MLPGui
 
                         File.WriteAllText(regressionFnFileName, csv.ToString());
                         MessageBox.Show("Zapisano plik " + regressionFnFileName);
+                        this.buttonLaunchR.Enabled = true;
 
 
                     }
@@ -278,6 +279,23 @@ namespace MLPGui
         private void numericUDNeurons_ValueChanged(object sender, EventArgs e)
         {
             neuronLayers[this.comboBoxLayerNo.SelectedIndex] = (int)this.numericUDNeurons.Value;
+        }
+
+        private void buttonLaunchR_Click(object sender, EventArgs e)
+        {
+            var rScriptsArgs = "";
+            if(this.comboBoxProblem.SelectedIndex == 0) {
+                rScriptsArgs += "classification_script.R ";
+                rScriptsArgs +=  "../" + classificationErrFileName + " ";
+                rScriptsArgs += "../" + classificationFileName + " ";
+            } else {
+                rScriptsArgs += "regression_script.R ";
+                rScriptsArgs += "../" + regressionErrFileName + " ";
+                rScriptsArgs += "../" + regressionFnFileName + " ";
+            }
+            rScriptsArgs += trainingFilename;
+
+            System.Diagnostics.Process.Start("cmd.exe", "/K cd Rplots && Rscript " + rScriptsArgs);
         }
     }
 }
