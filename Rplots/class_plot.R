@@ -20,11 +20,11 @@ class_plot <- function(trX, trY, tX, tY, minX=-1, maxX=1, minY=-1, maxY=1) {
   colors <- brewer.pal(paletteCount, 'Set1');
   plot(NA, NA, xlab="X", ylab="Y", xlim=c(minX, maxX), ylim=c(minY, maxY));
   
-  for(i in 1:clTCount) {
-    points(tX[[i]], tY[[i]], cex=0.1, col=bgcolors[[i]]);
+  for(i in 1:clCount) {
+    points(trX[[i]], trY[[i]], cex=0.1, col=bgcolors[[i]]);
   }
   
-  for(i in 1:clCount) {
-    points(trX[[i]], trY[[i]], col=colors[[i]]);
+  for(i in 1:clTCount) {
+    points(tX[[i]], tY[[i]], cex=0.1, col=colors[[i]]);
   }
 } 

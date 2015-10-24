@@ -33,6 +33,7 @@ namespace MLPCore
 
         protected abstract int FirstLayerNeuronCount { get; }
         protected abstract int LastLayerNeuronCount { get; }
+        protected int uniqueClassess;
 
         public enum ActivationFunctionType
         {
@@ -60,6 +61,7 @@ namespace MLPCore
 
             HashSet<int> unique = new HashSet<int>(input);
             int[] unique_idx = unique.ToArray();
+            uniqueClassess = unique_idx.Length;
 
             foreach (int v in input)
             {
@@ -146,8 +148,8 @@ namespace MLPCore
             network = new BasicNetwork();
 
             // Pierwsza warstwa nie ma funkcji aktywacji.
-            //network.AddLayer(new BasicLayer(null, bias, FirstLayerNeuronCount));
-            network.AddLayer(new BasicLayer(FirstLayerNeuronCount));
+            network.AddLayer(new BasicLayer(null, bias, FirstLayerNeuronCount));
+            //network.AddLayer(new BasicLayer(FirstLayerNeuronCount));
 
             foreach (int neurons in structure)
             {
@@ -155,8 +157,8 @@ namespace MLPCore
             }
 
             // Ostatnia warstwa nie ma biasu.
-            //network.AddLayer(new BasicLayer(CreateActivationFunction(fType), false, LastLayerNeuronCount));
-            network.AddLayer(new BasicLayer(LastLayerNeuronCount));
+            network.AddLayer(new BasicLayer(CreateActivationFunction(), false, LastLayerNeuronCount));
+            //network.AddLayer(new BasicLayer(LastLayerNeuronCount));
 
             network.Structure.FinalizeStructure();
             network.Reset();
@@ -189,7 +191,9 @@ namespace MLPCore
             }
 
             training.FinishTraining();
-            return error;
+
+
+            return error.Skip(100).ToList();
         }
 
         public abstract Tuple<List<Results>, List<Results>> Test(string testSetFile);

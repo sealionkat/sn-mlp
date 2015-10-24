@@ -18,8 +18,7 @@ namespace MLPCore
 
         protected override int LastLayerNeuronCount
         {
-            // TODO: Number of classes
-            get { return 3; }
+            get { return uniqueClassess; }
         }
 
         public ClassificationNetwork(string trainingSetFile, List<int> networkStructure,
