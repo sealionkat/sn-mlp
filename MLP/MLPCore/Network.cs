@@ -45,7 +45,7 @@ namespace MLPCore
             switch (fType)
             {
                 case ActivationFunctionType.BiPolar:
-                    return new ActivationBipolarSteepenedSigmoid();
+                    return new ActivationTANH();
                 case ActivationFunctionType.UniPolar:
                     return new ActivationSigmoid();
                 default:
